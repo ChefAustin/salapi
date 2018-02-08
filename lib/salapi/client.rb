@@ -3,13 +3,15 @@
 module SalAPI
   # This is a top-level class comment
   class Client
-    def initialize(priv_key = nil, pub_key = nil)
+    def initialize(priv_key = nil, pub_key = nil, sal_url = nil)
       @priv_key = priv_key || ENV['SAL_PRIV_KEY']
       @pub_key = pub_key || ENV['SAL_PUB_KEY']
+      @sal_url = sal_url || ENV['SAL_URL']
     end
 
+    # TODO: Deal with pagination
     def machines_list
-      url = 'https://mr.gustocorp.com/api/machines'
+      url = "#{@sal_url}/api/machines"
       response = HTTParty.get(url, headers:
         {
           'publickey' => "#{@pub_key}",
@@ -18,5 +20,74 @@ module SalAPI
       JSON.parse(response.body)
     end
 
+    def machine_info(serial)
+      url = "#{@sal_url}/api/machines/#{serial}"
+      response = HTTParty.get(url, headers:
+        {
+          'publickey' => "#{@pub_key}",
+          'privatekey' => "#{@priv_key}"
+        })
+      JSON.parse(response.body)
+    end
+
+    def machine_facts(serial)
+      url = "#{@sal_url}/api/facts/#{serial}"
+      response = HTTParty.get(url, headers:
+        {
+          'publickey' => "#{@pub_key}",
+          'privatekey' => "#{@priv_key}"
+        })
+      JSON.parse(response.body)
+    end
+
+    def machine_conditions(serial)
+      url = "#{@sal_url}/api/conditions/#{serial}"
+      response = HTTParty.get(url, headers:
+        {
+          'publickey' => "#{@pub_key}",
+          'privatekey' => "#{@priv_key}"
+        })
+      JSON.parse(response.body)
+    end
+
+    def machine_apps(serial)
+      url = "#{@sal_url}/api/machines/#{serial}/inventory"
+      response = HTTParty.get(url, headers:
+        {
+          'publickey' => "#{@pub_key}",
+          'privatekey' => "#{@priv_key}"
+        })
+      JSON.parse(response.body)
+    end
+
+    def machine_delete(serial)
+      url = "#{@sal_url}/api/machines/#{serial}"
+      response = HTTParty.delete(url, headers:
+        {
+          'publickey' => "#{@pub_key}",
+          'privatekey' => "#{@priv_key}"
+        })
+      JSON.parse(response.body)
+    end
+
+    def apps_list
+      url = "#{@sal_url}/api/inventory"
+      response = HTTParty.get(url, headers:
+        {
+          'publickey' => "#{@pub_key}",
+          'privatekey' => "#{@priv_key}"
+        })
+      JSON.parse(response.body)
+    end
+
+    def search(query)
+      url = "#{@sal_url}/api/search/?query=#{query}"
+      response = HTTParty.get(url, headers:
+        {
+          'publickey' => "#{@pub_key}",
+          'privatekey' => "#{@priv_key}"
+        })
+      JSON.parse(response.body)
+    end
   end
 end
