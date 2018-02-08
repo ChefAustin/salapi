@@ -1,4 +1,6 @@
 # ./lib/salapi/client.rb
+# TODO: Deal with pagination
+#
 
 module SalAPI
   # This is a top-level class comment (Happy now, RuboCop?!)
@@ -11,11 +13,15 @@ module SalAPI
         { 'publickey' => @pub_key.to_s, 'privatekey' => @priv_key.to_s }
     end
 
-    # TODO: Deal with pagination
+    # Returns an array of serials
     def machine_list
       url = "#{@sal_url}/api/machines"
       response = HTTParty.get(url, headers: @sal_headers)
-      JSON.parse(response.body)
+      if JSON.parse(response.body)["next"].nil? == false
+        paginator(url) # TODO: Broken. Build pagination funct. using count and ?page=
+      else
+        JSON.parse(response.body)
+      end
     end
 
     def machine_info(serial)
@@ -33,7 +39,9 @@ module SalAPI
     def machine_conditions(serial)
       url = "#{@sal_url}/api/conditions/#{serial}"
       response = HTTParty.get(url, headers: @sal_headers)
-      JSON.parse(response.body)
+      more = JSON.parse(response.body)["next"].nil?
+      puts more
+      #JSON.parse(response.body)
     end
 
     def machine_apps(serial)

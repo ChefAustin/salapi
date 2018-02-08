@@ -10,6 +10,10 @@ Add this line to your application's Gemfile:
 
 `gem 'salapi', :git => "https://github.com/ChefAustin/salapi.git"`
 
+Run:
+
+`$ bundle install`
+
 ## Setup
 
 Set the following environment variables:
@@ -28,6 +32,31 @@ Set the following environment variables:
 - machine_delete
 - apps_list
 - search
+
+## Example
+
+
+```
+require 'salapi'
+
+# Instantiate
+client = SalAPI::Client.new
+
+# Gather node serial list
+fleet = client.machine_list
+
+# Metrics to report back from machines
+requested_metrics = ["hostname", "console_user", "serial", "operating_system", "deployed"]
+
+# Report back
+fleet.each do |box|
+  info = client.machine_info(box.to_s)
+  requested_metrics.each do |metric|
+    p info[metric]
+  end
+end
+
+```
 
 ## Contributing
 
