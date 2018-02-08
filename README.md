@@ -18,13 +18,23 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
+## Setup
 
-    $ gem install salapi
+Set the following environment variables:
+'SAL_PRIV_KEY' (API Private Key)
+'SAL_PUB_KEY' (API Public Key)
+'SAL_URL' (e.g. https://sal.megacorp.com)
 
-## Usage
+## Available Actions
 
-TODO: Write usage instructions here
+- machine_list
+- machine_info
+- machine_facts
+- machine_conditions
+- machine_apps
+- machine_delete
+- apps_list
+- search
 
 ## Development
 

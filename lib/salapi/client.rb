@@ -12,7 +12,7 @@ module SalAPI
     end
 
     # TODO: Deal with pagination
-    def machines_list
+    def machine_list
       url = "#{@sal_url}/api/machines"
       response = HTTParty.get(url, headers: @sal_headers)
       JSON.parse(response.body)
