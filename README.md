@@ -7,7 +7,8 @@ A simple Ruby wrapper for the [Sal API](https://github.com/salopensource/sal) wr
 ## Install
 
 Add this line to your application's Gemfile:
-`gem 'salapi', :git => "https://github.com/ChefAustin/salapi"`
+
+`gem 'salapi', :git => "https://github.com/ChefAustin/salapi.git"`
 
 ## Setup
 
