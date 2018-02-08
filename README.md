@@ -13,9 +13,10 @@ Add this line to your application's Gemfile:
 ## Setup
 
 Set the following environment variables:
-'SAL_PRIV_KEY' (API Private Key)
-'SAL_PUB_KEY' (API Public Key)
-'SAL_URL' (e.g. https://sal.megacorp.com)
+
+- 'SAL_PRIV_KEY' (API Private Key)
+- 'SAL_PUB_KEY' (API Public Key)
+- 'SAL_URL' (e.g. https://sal.megacorp.com)
 
 ## Available Actions
 
