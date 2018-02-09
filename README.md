@@ -6,8 +6,8 @@
 
 **TODO:**
 
-- Split `client` class into `machine` and `client` (all helper methods, `apps_list`, `search`).
-- Replace environment variables as a means of setting keys and ensure passing keys to function works as expected
+- :x: Split `client` class into `machine` and `client` (all helper methods, `apps_list`, `search`).
+
 
 ## Description
 
@@ -51,9 +51,9 @@ Set the following environment variables:
 require 'salapi'
 
 # Instantiate
-client = SalAPI::Client.new
+client = SalAPI::Client.new("PublicKey", "PrivateKey", "https://sal.supercorp.com")
 
-# Gather node serial list
+# Gather machine serial list
 fleet = client.machine_list
 
 # Metrics to report back from machines

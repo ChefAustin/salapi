@@ -5,9 +5,9 @@ module SalAPI
   # This is a top-level class comment (Happy now, RuboCop?!)
   class Client
     def initialize(priv_key = nil, pub_key = nil, sal_url = nil)
-      @priv_key = priv_key || ENV['SAL_PRIV_KEY']
-      @pub_key = pub_key || ENV['SAL_PUB_KEY']
-      @sal_url = sal_url || ENV['SAL_URL']
+      @priv_key = priv_key
+      @pub_key = pub_key
+      @sal_url = sal_url
       @sal_headers =
         { 'publickey' => @pub_key.to_s,
           'privatekey' => @priv_key.to_s,
