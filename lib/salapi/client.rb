@@ -9,7 +9,9 @@ module SalAPI
       @pub_key = pub_key || ENV['SAL_PUB_KEY']
       @sal_url = sal_url || ENV['SAL_URL']
       @sal_headers =
-        { 'publickey' => @pub_key.to_s, 'privatekey' => @priv_key.to_s, "Content-Type" => "application/json" }
+        { 'publickey' => @pub_key.to_s,
+          'privatekey' => @priv_key.to_s,
+          "Content-Type" => "application/json" }
     end
 
     # Helper method; handles retrieval and parsing
@@ -32,8 +34,7 @@ module SalAPI
     end
 
     # Helper method; handles paginated data
-    def paginator(request_url, total_pages)
-      i = 1
+    def paginator(request_url, total_pages, i = 1)
       complete = []
       while i <= total_pages
         pg = HTTParty.get("#{request_url}/?page=#{i}", headers: @sal_headers)
