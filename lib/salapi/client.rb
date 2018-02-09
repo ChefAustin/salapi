@@ -13,7 +13,17 @@ module SalAPI
         { 'publickey' => @pub_key.to_s, 'privatekey' => @priv_key.to_s }
     end
 
-    # Helper method; handles paginated responses (100/page)
+    # Helper method; handles retrieval and parsing
+    def get_json_response_body(endpoint_url)
+      JSON.parse((HTTParty.get(endpoint_url, headers: @sal_headers)).body)
+    end
+
+    # Helper method; handles pagination logic
+    def pg_clc(first_page)
+      (get_json_response_body(first_page)['count'].to_f / 100.0).ceil
+    end
+
+    # Helper method; handles paginated data
     def paginator(request_url, total_pages)
       i = 1
       complete = []
@@ -27,97 +37,53 @@ module SalAPI
       complete
     end
 
-    # Returns an array of serials
-    def machine_list
-      url = "#{@sal_url}/api/machines"
-      response = HTTParty.get(url, headers: @sal_headers)
-      json = JSON.parse(response.body)
-      pages = (json['count'].to_f / 100.0).ceil
-      if json["next"].nil? == false
-        rtr = paginator(url, pages).map { |h| h["serial"] }
-      else
-        rtr = json["results"]
-      end
-      rtr
-    end
-
     # Returns a hash of machine attributes
     def machine_info(serial)
       url = "#{@sal_url}/api/machines/#{serial}"
-      response = HTTParty.get(url, headers: @sal_headers)
-      JSON.parse(response.body)
+      get_json_response_body(url)
     end
 
-    # Returns a hash of
-    def machine_facts(serial)
-      url = "#{@sal_url}/api/facts/#{serial}"
-      response = HTTParty.get(url, headers: @sal_headers)
-      json = JSON.parse(response.body)
-      pages = (json['count'].to_f / 100.0).ceil
-      if json["next"].nil? == false
-        rtr = paginator(url, pages)
-      else
-        rtr = json["results"]
-      end
-      rtr
-    end
-
-    def machine_conditions(serial)
-      url = "#{@sal_url}/api/conditions/#{serial}"
-      response = HTTParty.get(url, headers: @sal_headers)
-      json = JSON.parse(response.body)
-      pages = (json['count'].to_f / 100.0).ceil
-      if json["next"].nil? == false
-        rtr = paginator(url, pages)
-      else
-        rtr = json["results"]
-      end
-      rtr
-    end
-
-    def machine_apps(serial)
-      url = "#{@sal_url}/api/machines/#{serial}/inventory"
-      response = HTTParty.get(url, headers: @sal_headers)
-      json = JSON.parse(response.body)
-      pages = (json['count'].to_f / 100.0).ceil
-      if json["next"].nil? == false
-        rtr = paginator(url, pages)
-      else
-        rtr = json["results"]
-      end
-      rtr
-    end
-
+    # TODO: This
     def machine_delete(serial)
       url = "#{@sal_url}/api/machines/#{serial}"
-      response = HTTParty.delete(url, headers: @sal_headers)
-      JSON.parse(response.body)
+      get_json_response_body(url)
     end
 
+    # Returns a paginated array of hashes
     def apps_list
       url = "#{@sal_url}/api/inventory"
-      response = HTTParty.get(url, headers: @sal_headers)
-      json = JSON.parse(response.body)
-      pages = (json['count'].to_f / 100.0).ceil
-      if json["next"].nil? == false
-        rtr = paginator(url, pages)
-      else
-        rtr = json["results"]
-      end
-      rtr
+      get_json_response_body(url)
     end
 
+    # Returns an array of strings (serial numbers)
+    def machine_list
+      url = "#{@sal_url}/api/machines"
+      pg_clc(url) >= 2 ? (paginator(url, pg_clc(url))) : (get_json_response_body(url)["results"])
+    end
+
+    # Returns a complete hash of Facter facts
+    def machine_facts(serial)
+      url = "#{@sal_url}/api/facts/#{serial}"
+      pg_clc(url) >= 2 ? (paginator(url, pg_clc(url))) : (get_json_response_body(url)["results"])
+    end
+
+    # TODO: Check this; broken.
+    # Returns a complete array of hashes
+    def machine_conditions(serial)
+      url = "#{@sal_url}/api/conditions/#{serial}"
+      pg_clc(url) >= 2 ? (paginator(url, pg_clc(url))) : (get_json_response_body(url)["results"])
+    end
+
+    # Returns a complete array of hashes
+    def machine_apps(serial)
+      url = "#{@sal_url}/api/machines/#{serial}/inventory"
+      pg_clc(url) >= 2 ? (paginator(url, pg_clc(url))) : (get_json_response_body(url)["results"])
+    end
+
+    # Returns an array of hashes
     def search(query)
       url = "#{@sal_url}/api/search/?query=#{query}"
-      response = HTTParty.get(url, headers: @sal_headers)
-      json = JSON.parse(response.body)
-      pages = (json['count'].to_f / 100.0).ceil
-      if json["next"].nil? == false
-        rtr = paginator(url, pages)
-      else
-        rtr = json["results"]
-      end
-      rtr
+      pg_clc(url) >= 2 ? (paginator(url, pg_clc(url))) : (get_json_response_body(url)["results"])
     end
   end
 end
