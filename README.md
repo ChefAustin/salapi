@@ -24,13 +24,15 @@ Set the following environment variables:
 
 ## Available Actions
 
-- machine_list
-- machine_info
-- machine_facts
-- machine_conditions
-- machine_apps
-- machine_delete
 - apps_list
+- machine_apps
+- machine_attribute
+- machine_conditions
+- machine_delete
+- machine_facts
+- machine_info
+- machine_list
+- machine_undeploy
 - search
 
 ## Example

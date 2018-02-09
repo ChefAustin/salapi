@@ -1,5 +1,4 @@
 # ./lib/salapi/client.rb
-# TODO: Deal with pagination
 #
 
 module SalAPI
@@ -18,6 +17,7 @@ module SalAPI
       JSON.parse((HTTParty.get(endpoint_url, headers: @sal_headers)).body)
     end
 
+    # Helper method; handles machine attribute updates
     def machine_patch(machine_url, kwargs)
       response = HTTParty.patch(
         machine_url,
@@ -68,7 +68,7 @@ module SalAPI
       end
     end
 
-    # TODO: This
+    # Removes a machine entry from Sal dB;
     def machine_delete(serial)
       url = "#{@sal_url}/api/machines/#{serial}"
       get_json_response_body(url)
