@@ -10,12 +10,20 @@ module SalAPI
       @pub_key = pub_key || ENV['SAL_PUB_KEY']
       @sal_url = sal_url || ENV['SAL_URL']
       @sal_headers =
-        { 'publickey' => @pub_key.to_s, 'privatekey' => @priv_key.to_s }
+        { 'publickey' => @pub_key.to_s, 'privatekey' => @priv_key.to_s, "Content-Type" => "application/json" }
     end
 
     # Helper method; handles retrieval and parsing
     def get_json_response_body(endpoint_url)
       JSON.parse((HTTParty.get(endpoint_url, headers: @sal_headers)).body)
+    end
+
+    def machine_patch(machine_url, kwargs)
+      response = HTTParty.patch(
+        machine_url,
+        :headers => @sal_headers,
+        :body => kwargs.to_json)
+      response
     end
 
     # Helper method; handles pagination logic
@@ -37,10 +45,27 @@ module SalAPI
       complete
     end
 
+    # Returns a desired, specified attribute key-value for given machine
+    def machine_attribute(serial, attribute)
+      url = "#{@sal_url}/api/machines/#{serial}"
+      get_json_response_body(url)["#{attribute}"]
+    end
+
     # Returns a hash of machine attributes
     def machine_info(serial)
       url = "#{@sal_url}/api/machines/#{serial}"
       get_json_response_body(url)
+    end
+
+    # Sets a machine's 'Deploy Status' to undeployed
+    def machine_undeploy(serial)
+      url = "#{@sal_url}/api/machines/#{serial}/"
+      response = machine_patch(url, {'deployed' => false})
+      if response.code == 200
+        machine_info(serial)["deployed"] ? ("Failed.") : ("Success.")
+      else
+        p "Undeploy of #{serial} failed with code: #{response.code}"
+      end
     end
 
     # TODO: This
