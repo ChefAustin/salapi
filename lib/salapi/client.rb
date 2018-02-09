@@ -13,6 +13,7 @@ module SalAPI
         { 'publickey' => @pub_key.to_s, 'privatekey' => @priv_key.to_s }
     end
 
+    # Helper method; handles paginated responses (100/page)
     def paginator(request_url, total_pages)
       i = 1
       complete = []
@@ -35,17 +36,19 @@ module SalAPI
       if json["next"].nil? == false
         rtr = paginator(url, pages).map { |h| h["serial"] }
       else
-        rtr = json
+        rtr = json["results"]
       end
       rtr
     end
 
+    # Returns a hash of machine attributes
     def machine_info(serial)
       url = "#{@sal_url}/api/machines/#{serial}"
       response = HTTParty.get(url, headers: @sal_headers)
       JSON.parse(response.body)
     end
 
+    # Returns a hash of
     def machine_facts(serial)
       url = "#{@sal_url}/api/facts/#{serial}"
       response = HTTParty.get(url, headers: @sal_headers)
@@ -54,7 +57,7 @@ module SalAPI
       if json["next"].nil? == false
         rtr = paginator(url, pages)
       else
-        rtr = json
+        rtr = json["results"]
       end
       rtr
     end
@@ -67,7 +70,7 @@ module SalAPI
       if json["next"].nil? == false
         rtr = paginator(url, pages)
       else
-        rtr = json
+        rtr = json["results"]
       end
       rtr
     end
@@ -75,7 +78,14 @@ module SalAPI
     def machine_apps(serial)
       url = "#{@sal_url}/api/machines/#{serial}/inventory"
       response = HTTParty.get(url, headers: @sal_headers)
-      JSON.parse(response.body)
+      json = JSON.parse(response.body)
+      pages = (json['count'].to_f / 100.0).ceil
+      if json["next"].nil? == false
+        rtr = paginator(url, pages)
+      else
+        rtr = json["results"]
+      end
+      rtr
     end
 
     def machine_delete(serial)
@@ -92,7 +102,7 @@ module SalAPI
       if json["next"].nil? == false
         rtr = paginator(url, pages)
       else
-        rtr = json
+        rtr = json["results"]
       end
       rtr
     end
@@ -105,7 +115,7 @@ module SalAPI
       if json["next"].nil? == false
         rtr = paginator(url, pages)
       else
-        rtr = json
+        rtr = json["results"]
       end
       rtr
     end
