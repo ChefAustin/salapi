@@ -4,6 +4,7 @@
 module SalAPI
   # This is a top-level class comment (Happy now, RuboCop?!)
   class Client
+
     def initialize(priv_key = nil, pub_key = nil, sal_url = nil)
       @priv_key = priv_key
       @pub_key = pub_key
@@ -93,7 +94,6 @@ module SalAPI
       pg_clc(url) >= 2 ? (paginator(url, pg_clc(url))) : (get_json_response_body(url)["results"])
     end
 
-    # TODO: Check this; broken.
     # Returns a complete array of hashes
     def machine_conditions(serial)
       url = "#{@sal_url}/api/conditions/#{serial}"
