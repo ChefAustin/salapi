@@ -1,7 +1,15 @@
 # Salapi
 
-WORK IN PROGRESS - I HIGHLY ADVISE AGAINST USING THIS.
-TODO: Split `client` class into `machine` and `client` (all helper methods, `apps_list`, `search`).
+## Notes/TODO
+
+**WORK IN PROGRESS - I HIGHLY ADVISE AGAINST USING THIS.**
+
+TODO:
+
+- Split `client` class into `machine` and `client` (all helper methods, `apps_list`, `search`).
+- Replace environment variables as a means of setting keys and ensure passing keys to function works as expected
+
+## Description
 
 A simple Ruby wrapper for the [Sal API](https://github.com/salopensource/sal) written as an initial dive into gem creation.
 
