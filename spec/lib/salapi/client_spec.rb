@@ -1,4 +1,4 @@
-# "./spec/lib/salapi/client_spec.rb"
+# ./spec/lib/salapi/client_spec.rb
 require 'rspec'
 require 'spec_helper'
 
