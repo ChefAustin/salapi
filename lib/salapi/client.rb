@@ -2,6 +2,7 @@
 #
 
 module SalAPI
+
   # This is a top-level class comment (Happy now, RuboCop?!)
   class Client
     def initialize(priv_key = nil, pub_key = nil, sal_url = nil)

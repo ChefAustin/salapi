@@ -9,7 +9,20 @@
 - :x: Split `client` class into `machine` and `client` (all helper methods, `apps_list`, `search`).
 - :x: Add HTTP response code analysis function with code-specific exceptions/retries.
 - :heavy_check_mark: RSpec tests for nil required authentication values (sal_url, keys)
-
+- :x: Add `machine_create` function
+- :x: Add `machine_group_create` function
+- :x: Add `machine_group_delete` function
+- :x: Add `machine_group_info` function
+- :x: Add `machine_group_list` function
+- :x: Add `business_unit_create` function
+- :x: Add `business_unit_delete` function
+- :x: Add `business_unit_info` function
+- :x: Add `business_unit_list` function
+- :x: Add `plugin_script_info` function
+- :x: Add `plugin_script_list` function
+- :x: Add `plugin_script_row` function
+- :x: Add `search_saved` function
+- :x: Write RSpec tests for everything...
 
 ## Description
 
