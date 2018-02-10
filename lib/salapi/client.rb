@@ -9,14 +9,16 @@ module SalAPI
       @priv_key = priv_key
       @pub_key = pub_key
       @sal_url = sal_url
+      raise ArgumentError if @sal_url.nil?
       @sal_headers =
-        { 'publickey' => @pub_key.to_s,
-          'privatekey' => @priv_key.to_s,
-          "Content-Type" => "application/json" }
+          { 'publickey' => @pub_key.to_s,
+            'privatekey' => @priv_key.to_s,
+            "Content-Type" => "application/json" }
+      raise ArgumentError if @sal_headers.values.any?(&:nil?)
     end
 
     # Helper method; handles retrieval and parsing
-    def get_json_response_body(endpoint_url)
+    def json_resp_body(endpoint_url)
       JSON.parse((HTTParty.get(endpoint_url, headers: @sal_headers)).body)
     end
 
@@ -29,9 +31,9 @@ module SalAPI
       response
     end
 
-    # Helper method; handles pagination logic
+    # Helper method; handles page count calculation (based on 100 items/page)
     def pg_clc(first_page)
-      (get_json_response_body(first_page)['count'].to_f / 100.0).ceil
+      (json_resp_body(first_page)['count'].to_f / 100.0).ceil
     end
 
     # Helper method; handles paginated data
@@ -50,13 +52,13 @@ module SalAPI
     # Returns a desired, specified attribute key-value for given machine
     def machine_attribute(serial, attribute)
       url = "#{@sal_url}/api/machines/#{serial}"
-      get_json_response_body(url)["#{attribute}"]
+      json_resp_body(url)["#{attribute}"]
     end
 
     # Returns a hash of machine attributes
     def machine_info(serial)
       url = "#{@sal_url}/api/machines/#{serial}"
-      get_json_response_body(url)
+      json_resp_body(url)
     end
 
     # Sets a machine's 'Deploy Status' to undeployed
@@ -73,43 +75,43 @@ module SalAPI
     # Removes a machine entry from Sal dB;
     def machine_delete(serial)
       url = "#{@sal_url}/api/machines/#{serial}"
-      get_json_response_body(url)
+      json_resp_body(url)
     end
 
     # Returns a paginated array of hashes
     def apps_list
       url = "#{@sal_url}/api/inventory"
-      get_json_response_body(url)
+      json_resp_body(url)
     end
 
     # Returns an array of strings (serial numbers)
     def machine_list
       url = "#{@sal_url}/api/machines"
-      pg_clc(url) >= 2 ? (paginator(url, pg_clc(url))) : (get_json_response_body(url)["results"])
+      pg_clc(url) >= 2 ? (paginator(url, pg_clc(url))) : (json_resp_body(url)["results"])
     end
 
     # Returns a complete hash of Facter facts
     def machine_facts(serial)
       url = "#{@sal_url}/api/facts/#{serial}"
-      pg_clc(url) >= 2 ? (paginator(url, pg_clc(url))) : (get_json_response_body(url)["results"])
+      pg_clc(url) >= 2 ? (paginator(url, pg_clc(url))) : (json_resp_body(url)["results"])
     end
 
     # Returns a complete array of hashes
     def machine_conditions(serial)
       url = "#{@sal_url}/api/conditions/#{serial}"
-      pg_clc(url) >= 2 ? (paginator(url, pg_clc(url))) : (get_json_response_body(url)["results"])
+      pg_clc(url) >= 2 ? (paginator(url, pg_clc(url))) : (json_resp_body(url)["results"])
     end
 
     # Returns a complete array of hashes
     def machine_apps(serial)
       url = "#{@sal_url}/api/machines/#{serial}/inventory"
-      pg_clc(url) >= 2 ? (paginator(url, pg_clc(url))) : (get_json_response_body(url)["results"])
+      pg_clc(url) >= 2 ? (paginator(url, pg_clc(url))) : (json_resp_body(url)["results"])
     end
 
     # Returns an array of hashes
     def search(query)
       url = "#{@sal_url}/api/search/?query=#{query}"
-      pg_clc(url) >= 2 ? (paginator(url, pg_clc(url))) : (get_json_response_body(url)["results"])
+      pg_clc(url) >= 2 ? (paginator(url, pg_clc(url))) : (json_resp_body(url)["results"])
     end
   end
 end

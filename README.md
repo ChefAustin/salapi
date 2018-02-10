@@ -7,6 +7,8 @@
 **TODO:**
 
 - :x: Split `client` class into `machine` and `client` (all helper methods, `apps_list`, `search`).
+- :x: Add HTTP response code analysis function with code-specific exceptions/retries.
+- :heavy_check_mark: RSpec tests for nil requires values (url, keys)
 
 
 ## Description
