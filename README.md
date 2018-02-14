@@ -4,27 +4,6 @@
 
 **WORK IN PROGRESS - I HIGHLY ADVISE AGAINST USING THIS.**
 
-**TODO:**
-
-- :x: Adjust all code to work for Sal's v2 REST framework
-- :x: Split `client` class into `machine` and `client` (all helper methods, `apps_list`, `search`).
-- :x: Add HTTP response code analysis function with code-specific exceptions/retries.
-- :heavy_check_mark: RSpec tests for nil required authentication values (sal_url, keys)
-- :x: Add `machine_create` function
-- :x: Add `machine_group_create` function
-- :x: Add `machine_group_delete` function
-- :x: Add `machine_group_info` function
-- :x: Add `machine_group_list` function
-- :x: Add `business_unit_create` function
-- :x: Add `business_unit_delete` function
-- :x: Add `business_unit_info` function
-- :x: Add `business_unit_list` function
-- :x: Add `plugin_script_info` function
-- :x: Add `plugin_script_list` function
-- :x: Add `plugin_script_row` function
-- :x: Add `search_saved` function
-- :x: Write RSpec tests for everything...
-
 ## Description
 
 A simple Ruby wrapper for the [Sal API](https://github.com/salopensource/sal) written as an initial dive into gem creation.
